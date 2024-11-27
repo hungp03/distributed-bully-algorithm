@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Data
 @AllArgsConstructor
-public class TransactionHistory {
+public class TransactionHistoryModel {
     private int id;
     private int sendId;
     private int receiveId;
