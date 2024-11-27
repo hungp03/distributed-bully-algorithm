@@ -8,15 +8,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- *
  * @author Hung Pham
  */
 @Data
-@AllArgsConstructor
-public class Node{
+public class Node {
     private int id;
     private int port;
     private String host;
     private boolean isAdmin;
     private boolean timeout = false;
+
+    public Node(int port, String host, int id, boolean isAdmin) {
+        this.port = port;
+        this.host = host;
+        this.id = id;
+        this.isAdmin = isAdmin;
+    }
 }
