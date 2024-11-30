@@ -4,7 +4,6 @@
  */
 package com.ptithcm.bully.algorithm.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
