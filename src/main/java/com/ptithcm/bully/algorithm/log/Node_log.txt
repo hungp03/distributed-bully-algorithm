@@ -1,0 +1,246 @@
+
+18:49:03 30/11/2024:1: coordinator-1
+18:49:25 30/11/2024:1Da gui yeu cau chuyen 23 den 1
+18:49:28 30/11/2024:0: Đã chuyển 23 đến 1
+18:49:34 30/11/2024:0: Received 32 from 1
+18:49:41 30/11/2024:0: Received 432 from 1
+18:49:58 30/11/2024:0: Received 32 from 1
+18:50:05 30/11/2024:0: Received 3234 from 1
+18:50:46 30/11/2024:2: coordinator-2
+18:50:49 30/11/2024:0: Received 32 from 2
+18:51:05 30/11/2024:0: Received 43 from 2
+
+18:50:48 30/11/2024:2: Đã chuyển 32 đến 0
+18:50:59 30/11/2024:2: Đã chuyển 43 đến 1
+18:51:04 30/11/2024:2: Đã chuyển 43 đến 0
+18:51:09 30/11/2024:2: Đã chuyển 43 đến 1
+
+18:49:33 30/11/2024:1: Đã chuyển 32 đến 0
+18:49:40 30/11/2024:1: Đã chuyển 432 đến 0
+18:49:49 30/11/2024:1: Đã chuyển 23 đến 2
+18:49:58 30/11/2024:1: Đã chuyển 32 đến 0
+18:50:03 30/11/2024:1: Đã chuyển 3234 đến 0
+18:50:08 30/11/2024:1: Đã chuyển 3 đến 2
+18:50:19 30/11/2024:1: Đã chuyển 23 đến 2
+18:50:31 30/11/2024:1: Đã chuyển 2 đến 2
+
+18:52:54 30/11/2024:2: coordinator has received transfer request
+18:52:54 30/11/2024:2Da gui yeu cau chuyen 23 den 0
+18:53:02 30/11/2024:2: coordinator has received transfer request
+18:53:02 30/11/2024:2Da gui yeu cau chuyen 23 den 2
+18:53:19 30/11/2024:2: coordinator has received transfer request
+18:53:19 30/11/2024:2Da gui yeu cau chuyen 78 den 2
+
+18:52:13 30/11/2024:2: coordinator has received transfer request
+18:52:13 30/11/2024:0: Đã thông báo đến 1
+18:52:13 30/11/2024:2Da gui yeu cau chuyen 12 den 1
+18:52:13 30/11/2024:0: Received 12 from 0
+18:53:02 30/11/2024:0: Đã thông báo đến 2
+18:53:02 30/11/2024:0: Received 23 from 1
+18:53:19 30/11/2024:0: Đã thông báo đến 2
+18:53:19 30/11/2024:0: Received 78 from 1
+
+18:56:13 30/11/2024:2: coordinator-2
+18:56:31 30/11/2024:0: Received 1 from 2
+
+
+18:56:30 30/11/2024:2: Đã chuyển 1 đến 1
+
+
+
+
+19:13:31 30/11/2024:2: coordinator-2
+19:13:31 30/11/2024:2: coordinator-2
+19:13:45 30/11/2024:0: Received 3 from 1
+19:13:45 30/11/2024:0: Đã thông báo đến 2
+19:13:52 30/11/2024:0: Received 99 from 2
+19:14:02 30/11/2024:0: Received 32 from 2
+19:14:09 30/11/2024:2: coordinator has received transfer request
+19:14:09 30/11/2024:2Da gui yeu cau chuyen 2 den 1
+19:14:09 30/11/2024:0: Đã thông báo đến 1
+19:14:09 30/11/2024:0: Received 2 from 0
+
+19:13:45 30/11/2024:2: coordinator has received transfer request
+19:13:45 30/11/2024:2Da gui yeu cau chuyen 3 den 2
+
+19:13:51 30/11/2024:2: Đã chuyển 99 đến 0
+19:14:01 30/11/2024:2: Đã chuyển 32 đến 1
+
+
+
+
+19:23:40 30/11/2024:4: coordinator-4
+19:23:40 30/11/2024:4: coordinator-4
+19:23:40 30/11/2024:4: coordinator-4
+19:24:00 30/11/2024:4: coordinator-4
+19:24:00 30/11/2024:4: coordinator-4
+19:24:00 30/11/2024:4: coordinator-4
+19:24:01 30/11/2024:4: coordinator-4
+19:24:01 30/11/2024:4: coordinator-4
+19:24:01 30/11/2024:4: coordinator-4
+
+19:25:27 30/11/2024:1: Đã chuyển 4 đến 0
+19:25:37 30/11/2024:1: Đã chuyển 432 đến 0
+
+19:25:04 30/11/2024:1: coordinator-1
+19:25:10 30/11/2024:1Da gui yeu cau chuyen 23 den 1
+19:25:27 30/11/2024:0: Received 4 from 1
+19:25:37 30/11/2024:0: Received 432 from 1
+
+
+19:39:49 30/11/2024:2: Đã chuyển 34 đến 0
+19:39:55 30/11/2024:2: Đã chuyển 324 đến 1
+19:40:27 30/11/2024:2: Đã chuyển 324 đến 0
+19:40:34 30/11/2024:2: Đã chuyển 4 đến 0
+19:40:43 30/11/2024:2: Đã chuyển 342 đến 1
+
+19:38:20 30/11/2024:1: Đã chuyển 324 đến 0
+19:38:29 30/11/2024:1: Đã chuyển 23 đến 0
+19:38:33 30/11/2024:1: Đã chuyển 26 đến 0
+19:39:14 30/11/2024:1: Vừa nhận được 345 đồng từ id: 0
+19:39:30 30/11/2024:1: Vừa nhận được 345 đồng từ id: 0
+19:39:46 30/11/2024:2: coordinator-2
+19:39:56 30/11/2024:1: Received 324 from 2
+19:40:43 30/11/2024:1: Received 342 from 2
+19:41:01 30/11/2024:2Da gui yeu cau chuyen 43 den 2
+19:41:37 30/11/2024:2: coordinator-2
+19:42:07 30/11/2024:2Da gui yeu cau chuyen 34 den 2
+19:43:37 30/11/2024:1: coordinator-1
+19:43:46 30/11/2024:1: Đã chuyển 2 đến 0
+19:44:07 30/11/2024:2: coordinator-2
+19:44:49 30/11/2024:2Da gui yeu cau chuyen 123 den 0
+
+
+19:46:21 30/11/2024:1: Vừa nhận được 34 đồng từ id: 4
+19:46:31 30/11/2024:1: Đã thông báo đến 0
+19:46:42 30/11/2024:1: Vừa nhận được 5675 đồng từ id: 4
+19:46:45 30/11/2024:1: Đã chuyển 4 đến 0
+19:46:51 30/11/2024:1: Đã chuyển 16 đến 4
+19:47:10 30/11/2024:1: Vừa nhận được 5754 đồng từ id: 4
+19:47:53 30/11/2024:4: coordinator-4
+19:47:59 30/11/2024:4: coordinator-4
+19:48:03 30/11/2024:4: coordinator-4
+19:48:09 30/11/2024:4: coordinator-4
+
+20:06:24 30/11/2024:0: Received 534 from 2
+
+
+
+20:52:45 30/11/2024:2: Đã thông báo đến 0
+20:52:52 30/11/2024:2: Đã chuyển 32 đến 0
+20:52:57 30/11/2024:2: Đã chuyển 43 đến 1
+20:55:33 30/11/2024:2: Vừa nhận được 23 đồng từ id: 1
+21:07:56 30/11/2024:2: Đã chuyển 23 đến 0
+21:08:22 30/11/2024:2: Đã thông báo đến 1
+21:08:27 30/11/2024:2: Vừa nhận được 324 đồng từ id: 0
+
+
+20:46:38 30/11/2024:1: coordinator-1
+20:47:04 30/11/2024:2: coordinator-2
+20:52:45 30/11/2024:0: Received 432 from 1
+20:52:53 30/11/2024:0: Received 32 from 2
+21:07:56 30/11/2024:0: Received 23 from 2
+21:08:22 30/11/2024:2: coordinator has received transfer request
+21:08:22 30/11/2024:2Da gui yeu cau chuyen 23 den 1
+21:08:27 30/11/2024:2: coordinator has received transfer request
+21:08:27 30/11/2024:2Da gui yeu cau chuyen 324 den 2
+21:08:56 30/11/2024:1: coordinator-1
+21:09:04 30/11/2024:0: Received 34 from 1
+21:48:15 30/11/2024:3: coordinator-3
+21:48:22 30/11/2024:0: Received 34 from 1
+21:48:31 30/11/2024:1: coordinator has received transfer request
+21:48:31 30/11/2024:1Da gui yeu cau chuyen 3 den 4
+21:48:41 30/11/2024:1: coordinator has received transfer request
+21:48:41 30/11/2024:1Da gui yeu cau chuyen 43 den 3
+
+20:47:04 30/11/2024:2: coordinator-2
+20:52:45 30/11/2024:2: coordinator has received transfer request
+20:52:45 30/11/2024:2Da gui yeu cau chuyen 432 den 0
+20:52:57 30/11/2024:1: Received 43 from 2
+20:55:33 30/11/2024:2: coordinator has received transfer request
+20:55:33 30/11/2024:2Da gui yeu cau chuyen 23 den 2
+21:08:22 30/11/2024:1: Received 23 from 0
+21:08:56 30/11/2024:2Da gui yeu cau chuyen 342 den 0
+21:09:02 30/11/2024:1: Đã chuyển 34 đến 0
+21:48:15 30/11/2024:3: coordinator-3
+21:48:21 30/11/2024:1: Đã chuyển 34 đến 0
+
+22:03:59 30/11/2024:1: coordinator-1
+22:04:47 30/11/2024:2: coordinator-2
+22:05:09 30/11/2024:0: Received 34 from 2
+
+22:05:08 30/11/2024:2: Đã chuyển 34 đến 0
+
+22:04:47 30/11/2024:2: coordinator-2
+
+22:28:45 30/11/2024:1: coordinator-1
+22:28:51 30/11/2024:1: coordinator da nhan yeu cau chuyen tien
+22:28:51 30/11/2024:1Da gui yeu cau chuyen 23 den 1
+22:28:59 30/11/2024:0: Received 23 from 1
+
+22:28:51 30/11/2024:1: Vừa nhận được 23 đồng từ id: 0
+22:28:57 30/11/2024:1: Đã chuyển 23 đến 0
+
+22:38:27 30/11/2024:1: coordinator-1
+22:38:31 30/11/2024:0: Received 23 from 1
+22:38:38 30/11/2024:1: coordinator da nhan yeu cau chuyen tien
+22:38:38 30/11/2024:1Da gui yeu cau chuyen 23 den 1
+22:38:50 30/11/2024:0: Received 20 from 1
+22:39:08 30/11/2024:0: Received 25 from 1
+
+22:38:30 30/11/2024:1: Đã chuyển 23 đến 0
+22:38:38 30/11/2024:1: Vừa nhận được 23 đồng từ id: 0
+22:38:49 30/11/2024:1: Đã chuyển 20 đến 0
+22:39:07 30/11/2024:1: Đã chuyển 25 đến 0
+
+
+23:19:27 30/11/2024:0: coordinator-0
+
+23:24:18 30/11/2024:0: coordinator-0
+
+23:27:44 30/11/2024:1: coordinator-1
+23:27:54 30/11/2024:2: coordinator-2
+23:29:23 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:29:23 30/11/2024:2Da gui yeu cau chuyen 32 den 0
+23:29:23 30/11/2024:1: Received 32 from 1
+23:29:38 30/11/2024:1: Received 432 from 2
+23:30:01 30/11/2024:1: Vừa nhận được 5765 đồng từ id: 0
+23:30:12 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:30:12 30/11/2024:2Da gui yeu cau chuyen 234 den 0
+23:30:12 30/11/2024:1: Received 234 from 1
+23:30:20 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:30:20 30/11/2024:2Da gui yeu cau chuyen 234 den 2
+
+23:29:23 30/11/2024:2: Đã thông báo đến 0
+23:29:37 30/11/2024:2: Đã chuyển 432 đến 0
+23:30:12 30/11/2024:2: Đã thông báo đến 0
+
+23:46:39 30/11/2024:2: Vừa nhận được 32 đồng từ id: 1
+23:48:06 30/11/2024:2: Đã thông báo đến 0
+23:48:28 30/11/2024:2: Đã thông báo đến 0
+23:48:41 30/11/2024:2: Đã thông báo đến 0
+23:48:51 30/11/2024:2: Đã thông báo đến 0
+
+23:46:32 30/11/2024:2: coordinator-2
+23:46:39 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:46:39 30/11/2024:2Da gui yeu cau chuyen 32 den 2
+23:48:06 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:48:06 30/11/2024:2Da gui yeu cau chuyen 123 den 0
+23:48:28 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:48:28 30/11/2024:2Da gui yeu cau chuyen 321 den 0
+23:48:41 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:48:41 30/11/2024:2Da gui yeu cau chuyen 100 den 0
+23:48:51 30/11/2024:2: coordinator da nhan yeu cau chuyen tien
+23:48:51 30/11/2024:2Da gui yeu cau chuyen 100 den 0
+23:50:45 30/11/2024:1: Vừa nhận được 45 đồng từ id: 0
+23:51:04 30/11/2024:1: Vừa nhận được 546 đồng từ id: 0
+23:51:27 30/11/2024:1: Vừa nhận được 456 đồng từ id: 0
+
+00:10:29 01/12/2024:1: Đã chuyển 23 đến 0
+00:10:48 01/12/2024:2: coordinator-2
+00:10:56 01/12/2024:2: coordinator da nhan yeu cau chuyen tien
+00:10:56 01/12/2024:2Da gui yeu cau chuyen 3 den 2
+
+00:10:50 01/12/2024:2: Đã chuyển 324 đến 0
+00:10:56 01/12/2024:2: Vừa nhận được 3 đồng từ id: 1
+
