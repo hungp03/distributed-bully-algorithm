@@ -6,8 +6,10 @@ package com.ptithcm.bully.algorithm.ui;
 
 import com.ptithcm.bully.algorithm.model.Node;
 import com.ptithcm.bully.algorithm.model.Server;
+import java.awt.event.WindowAdapter;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 import javax.swing.JFrame;
@@ -27,6 +29,26 @@ public class FirstNode extends javax.swing.JFrame {
      */
     public FirstNode() {
         initComponents();
+        this.tpChatbox.setContentType("text/html");
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (JOptionPane.showConfirmDialog(null,
+                        "Bạn chắc chắn muốn thoát?", "Thoát chương trình?",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    System.out.println("EXIT PROGRAM");
+                    if (sv != null) {
+                        try {
+                            sv.WriteLog("Node_log.txt");
+                        } catch (IOException ex) {
+                            System.out.println("NOT CONNECTED");
+                        }
+                    }
+                    System.exit(0);
+                }
+            }
+        });
     }
 
     /**
@@ -63,7 +85,7 @@ public class FirstNode extends javax.swing.JFrame {
         lbWarningMoney = new javax.swing.JLabel();
         lbWarningMsg = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Transaction Node");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setResizable(false);
@@ -110,8 +132,6 @@ public class FirstNode extends javax.swing.JFrame {
         tfAccountMoney.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         tfAccountMoney.setForeground(new java.awt.Color(255, 102, 51));
 
-        cbReceiveMoneyId.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel4.setText("Số tiền cần chuyển");
 
@@ -132,6 +152,7 @@ public class FirstNode extends javax.swing.JFrame {
 
         btnSendMoney.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnSendMoney.setText("Chuyển tiền");
+        btnSendMoney.setEnabled(false);
         btnSendMoney.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSendMoneyActionPerformed(evt);
@@ -145,6 +166,7 @@ public class FirstNode extends javax.swing.JFrame {
 
         btnOpenHistoryTransact.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnOpenHistoryTransact.setText("Mở lịch sử giao dịch");
+        btnOpenHistoryTransact.setEnabled(false);
         btnOpenHistoryTransact.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenHistoryTransactActionPerformed(evt);
@@ -217,11 +239,9 @@ public class FirstNode extends javax.swing.JFrame {
                                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(tfAccountMoney)
                                             .addComponent(lbWarningMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbWarningMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbWarningMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -290,24 +310,52 @@ public class FirstNode extends javax.swing.JFrame {
         if (this.tfPort.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập port", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-            this.sv = new Server(this, 3000, 0, this.tpLog, this.tpChatbox, this.tfAccountMoney, this.btnSendMoney);
+            // Hiển thị dialog để người dùng nhập ID
+            String inputId = JOptionPane.showInputDialog(this, "Nhập Account ID (0 - 4):", "Input ID", JOptionPane.QUESTION_MESSAGE);
+            if (inputId == null) {
+                return;
+            }
+            if (inputId.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            int serverId = 0;
+            try {
+                serverId = Integer.parseInt(inputId);
+                if (serverId < 0 || serverId > 4) {
+                    JOptionPane.showMessageDialog(this, "ID phải từ 0-4", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            this.sv = new Server(this, 3000, serverId, this.tpLog, this.tpChatbox, this.tfAccountMoney, this.btnSendMoney);
             for (int i = 0; i < 5; i++) {
                 if (i != this.sv.getId()) {
                     this.cbReceiveMoneyId.addItem(String.valueOf(i));
                 }
             }
 
+            // Khởi động server
             this.sv.execute();
-            this.lbServerStatus.setText("server is running on port " + tfPort.getText());
+            this.lbServerStatus.setText("Server is running on port " + tfPort.getText());
             this.btnConnect.setEnabled(false);
+            this.btnSendMoney.setEnabled(true);
+            this.btnOpenHistoryTransact.setEnabled(true);
+            // Kiểm tra và thông báo coordinator
             Node n = this.sv.getCoordinator();
             if (n == null) {
+                for (Node item : sv.getListNode()) {
+                    // Xử lý nếu không có coordinator
+                }
                 sv.bully(3);
             } else if (n.getId() == this.sv.getId()) {
-                System.out.println("Day chinh la dieu phoi vien");
+                System.out.println("Đây chính là điều phối viên");
             } else {
-                JOptionPane.showMessageDialog(this, "Coordinator có id: " + n.getId(), "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Coordinator có id: " + n.getId(), "Thông báo", JOptionPane.DEFAULT_OPTION);
             }
+
             this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
             this.cbReceiveMoneyId.setEnabled(true);
             this.tfMoneyValue.setEditable(true);
@@ -339,7 +387,7 @@ public class FirstNode extends javax.swing.JFrame {
             String msg;
             try {
                 revId = Integer.parseInt(Objects.requireNonNull(this.cbReceiveMoneyId.getSelectedItem()).toString());
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 lbWarningCb.setText("Bạn chưa chọn Id người nhận");
                 return;
             }
@@ -354,7 +402,7 @@ public class FirstNode extends javax.swing.JFrame {
                     lbWarningMoney.setText("Số tiền muốn gửi lớn hơn tài khoản hiện có");
                     return;
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 lbWarningMoney.setText("Số tiền muốn gửi không đúng định dạng");
                 return;
             }
@@ -387,7 +435,7 @@ public class FirstNode extends javax.swing.JFrame {
                             socket.close();
                         }
                     }
-                } catch (Exception ignored) {
+                } catch (IOException ignored) {
                 }
                 return;
             }
@@ -408,7 +456,7 @@ public class FirstNode extends javax.swing.JFrame {
 
     private void btnOpenHistoryTransactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenHistoryTransactActionPerformed
         if (historyFrame == null) {
-            historyFrame = new TransactionHistory();
+            historyFrame = new TransactionHistory(this.sv.getId());
         }
 
         historyFrame.setVisible(true);

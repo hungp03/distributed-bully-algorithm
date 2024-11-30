@@ -75,8 +75,8 @@ public class DBConnection {
             stmt.setInt(2, receive);
             stmt.setInt(3, money);
             stmt.setString(4, msg);
-
             stmt.executeUpdate();
+            System.out.println(updateQuery);
             return true;
         } catch (SQLException e) {
             System.err.println("Lỗi khi chuyển tiền: " + e.getMessage());
@@ -104,6 +104,7 @@ public class DBConnection {
                 tmp = new TransactionHistoryModel(transId,sendid,receiveid,money,date,msg);
                 allTransacts.add(tmp);
             }
+            System.out.println(updateQuery);
             stmt.close();
             return allTransacts;
         } catch (Exception e) {

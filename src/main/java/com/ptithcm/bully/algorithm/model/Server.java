@@ -4,9 +4,7 @@ import com.ptithcm.bully.algorithm.util.DBConnection;
 import lombok.Data;
 
 import javax.swing.*;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
@@ -15,6 +13,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Data
 public class Server {
@@ -67,6 +67,7 @@ public class Server {
                     }
                 }
             } catch (IOException ex) {
+                System.out.println(ex.getMessage());
                 JOptionPane.showMessageDialog(mainFrame, "Không thể tạo server: " + id);
             }
         });
@@ -86,9 +87,12 @@ public class Server {
             msgText += "<h3 style=\"margin-right:150px;background-color:#636e72;color:#fff;padding:5px;\">" + msg + "</h3>";
         }
         pane.setText("");
-        pane.setText("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n"
-                + "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
-                + "<style>body {color: #fff;}</style></head>\n" + "<body>\n"
+        pane.setText("""
+                     <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                     <style>body {color: #fff;}</style></head>
+                     <body>
+                     """
                 + msgText + "</body>\n" + "</html>");
     }
 
@@ -113,10 +117,10 @@ public class Server {
             }
             if (i.getId() > id) {
                 try {
-                    Socket sk = new Socket(i.getHost(), i.getPort());
-                    max = i;
-                    sk.close();
-                } catch (Exception ignored) {
+                    try (Socket sk = new Socket(i.getHost(), i.getPort())) {
+                        max = i;
+                    }
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -130,12 +134,12 @@ public class Server {
 
     public void initListNode() {
         try {
-            Node n = new Node(3000, "127.0.0.1", 0, false);
-//            node n1 = new node(3001, "127.0.0.1", 1, false);
-//            node n2 = new node(3002, "127.0.0.1", 2, false);
+            Node n = new Node(3000, "127.0.0.1", 1, false);
+//            Node n1 = new Node(3000, "10.252.3.24", 0, false);
+            Node n2 = new Node(3000, "127.0.0.1", 2, false);
             this.listNode.add(n);
 //            this.listNode.add(n1);
-//            this.listNode.add(n2);
+            this.listNode.add(n2);
         } catch (Exception e) {
             System.out.println("error - init list node");
             System.out.println(e.getMessage());
@@ -241,33 +245,15 @@ public class Server {
 
                 // Xử lý theo từng loại message
                 switch (list[0]) {
-                    case "check":
-                        handleCheckMessage(list, writer);
-                        break;
-                    case "election":
-                        handleElectionMessage(list, writer);
-                        break;
-                    case "answer":
-                        handleAnswerMessage(list);
-                        break;
-                    case "coordinator":
-                        handleCoordinatorMessage(list);
-                        break;
-                    case "message":
-                        handleMessage(list);
-                        break;
-                    case "transfers":
-                        handleTransfersMessage(list, writer);
-                        break;
-                    case "confirmtransfers":
-                        handleConfirmTransfersMessage();
-                        break;
-                    case "receivemoney":
-                        handleReceiveMoneyMessage(list);
-                        break;
-                    default:
-                        System.out.println("Received unknown message type");
-                        break;
+                    case "check" -> handleCheckMessage(list, writer);
+                    case "election" -> handleElectionMessage(list, writer);
+                    case "answer" -> handleAnswerMessage(list);
+                    case "coordinator" -> handleCoordinatorMessage(list);
+                    case "message" -> handleMessage(list);
+                    case "transfers" -> handleTransfersMessage(list, writer);
+                    case "confirmtransfers" -> handleConfirmTransfersMessage();
+                    case "receivemoney" -> handleReceiveMoneyMessage(list);
+                    default -> System.out.println("Received unknown message type");
                 }
             } catch (IOException ex) {
                 System.out.println("Error while handling message: " + ex.getMessage());
@@ -278,7 +264,6 @@ public class Server {
                 }
             }
         });
-
         th.start();
     }
 
@@ -420,23 +405,17 @@ public class Server {
     public String getCurrentTime() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
         LocalDateTime date = LocalDateTime.now();
-        return (String.valueOf(format.format(date)));
+        return (format.format(date));
     }
 
     public void bully(int opt) {
         //if(flagBully){return;}
         switch (opt) {
-            case 0:
-                JOptionPane.showMessageDialog(mainFrame, "Điều phối viên không phản hổi! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case 1:
-                JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận request từ một tiến trình có Id lớn hơn! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case 2:
-                JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận một election \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            default:
-                break;
+            case 0 -> JOptionPane.showMessageDialog(mainFrame, "Điều phối viên không phản hổi! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            case 1 -> JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận request từ một tiến trình có Id lớn hơn! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            case 2 -> JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận một election \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            default -> {
+            }
         }
 
         System.out.println("Bắt đầu thực hiện giải thuật bầu chọn bully");
@@ -444,17 +423,17 @@ public class Server {
         for (Node i : this.listNode) {
             if (i.getId() > this.id) {
                 try {
-                    Socket socket = new Socket(i.getHost(), i.getPort());
-                    DataInputStream reader = new DataInputStream(socket.getInputStream());
-                    DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
-                    String msg = "election - " + id;
-                    writer.writeUTF(msg);
-                    System.out.println("bully send - " + msg);
-                    String rev = reader.readUTF();
-                    System.out.println("bully rev - " + rev);
-                    reader.close();
-                    writer.close();
-                    socket.close();
+                    try (Socket socket = new Socket(i.getHost(), i.getPort())) {
+                        DataInputStream reader = new DataInputStream(socket.getInputStream());
+                        DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+                        String msg = "election - " + id;
+                        writer.writeUTF(msg);
+                        System.out.println("bully send - " + msg);
+                        String rev = reader.readUTF();
+                        System.out.println("bully rev - " + rev);
+                        reader.close();
+                        writer.close();
+                    }
                     System.out.println("Đã xác nhận có tiến trình id cao hơn");
                     cnt++;
                 } catch (IOException ex) {
@@ -473,11 +452,9 @@ public class Server {
         if (cnt > 0) {
             System.out.println("bully confirm-da xac nhan co it nhat 1 tien trinh co Id cao hon minh");
             switch (opt) {
-                case 0, 1, 2:
-                    JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
-                    break;
-                default:
-                    break;
+                case 0, 1, 2 -> JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+                default -> {
+                }
             }
             return;
         }
@@ -502,19 +479,17 @@ public class Server {
         for (Node n : listNode) {
             if (this.id != n.getId()) {
                 Thread th = new Thread() {
+                    @Override
                     public void run() {
                         try {
-                            //--- chỉ gửi thông điệp, không cần quan tâm phản hồi ---
-                            Socket socket = new Socket(n.getHost(), n.getPort());
                             //DataInputStream reader = new DataInputStream(socket.getInputStream());
-                            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
-                            writer.writeUTF("coordinator-" + id);
-                            System.out.println("da send coordinator to " + n.getId());
-                            //String rev = reader.readUTF();
-                            writer.close();
-                            //reader.close();
-                            socket.close();
-                        } catch (Exception e) {
+                            try ( //--- chỉ gửi thông điệp, không cần quan tâm phản hồi ---
+                                    Socket socket = new Socket(n.getHost(), n.getPort()); //DataInputStream reader = new DataInputStream(socket.getInputStream());
+                                    DataOutputStream writer = new DataOutputStream(socket.getOutputStream())) {
+                                writer.writeUTF("coordinator-" + id);
+                                System.out.println("da send coordinator to " + n.getId());
+                            }
+                        } catch (IOException e) {
                             System.out.println("node " + n.getId() + " was broke");
                         }
                     }
@@ -531,20 +506,31 @@ public class Server {
             return;
         }
         try {
-            Socket socket = new Socket(n.getHost(), n.getPort());
-            DataInputStream reader = new DataInputStream(socket.getInputStream());
-            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
-            writer.writeUTF(msg);
-            System.out.println("sendmoneyrequest send - " + msg);
-            String rev = reader.readUTF();
-            System.out.println("sendmoneyrequest receive - " + rev);
-            tpSettext(textPane, getCurrentTime() + ":" + n.getId() + ": " + rev);
-            reader.close();
-            writer.close();
-            socket.close();
+            try (Socket socket = new Socket(n.getHost(), n.getPort())) {
+                DataOutputStream writer;
+                try (DataInputStream reader = new DataInputStream(socket.getInputStream())) {
+                    writer = new DataOutputStream(socket.getOutputStream());
+                    writer.writeUTF(msg);
+                    System.out.println("sendmoneyrequest send - " + msg);
+                    String rev = reader.readUTF();
+                    System.out.println("sendmoneyrequest receive - " + rev);
+                    tpSettext(textPane, getCurrentTime() + ":" + n.getId() + ": " + rev);
+                }
+                writer.close();
+            }
         } catch (IOException ex) {
             System.out.println("sendmoneyrequest create socket to server");
             bully(0);
+        }
+    }
+    public void WriteLog(String filename) throws IOException {
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter("D:\\Project\\distributed-systems\\log\\" + filename, true));
+            pw.println(LogContain);
+            pw.flush();
+            pw.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
