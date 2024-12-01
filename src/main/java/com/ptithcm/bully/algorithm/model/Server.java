@@ -134,9 +134,9 @@ public class Server {
 
     public void initListNode() {
         try {
-            Node n = new Node(3000, "127.0.0.1", 1, false);
+            Node n = new Node(3000, "127.0.0.1", 1, true);
 //            Node n1 = new Node(3000, "10.252.3.24", 0, false);
-            Node n2 = new Node(3000, "127.0.0.1", 2, false);
+            Node n2 = new Node(3000, "192.168.43.78", 2, false);
             this.listNode.add(n);
 //            this.listNode.add(n1);
             this.listNode.add(n2);
