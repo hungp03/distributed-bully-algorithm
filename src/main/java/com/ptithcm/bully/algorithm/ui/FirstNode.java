@@ -6,7 +6,6 @@ package com.ptithcm.bully.algorithm.ui;
 
 import com.ptithcm.bully.algorithm.model.Node;
 import com.ptithcm.bully.algorithm.model.Server;
-import com.ptithcm.bully.algorithm.model.TransactionHistoryModel;
 
 import java.awt.event.WindowAdapter;
 
@@ -309,7 +308,8 @@ public class FirstNode extends javax.swing.JFrame {
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         if (this.tfPort.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập port", "Warning", JOptionPane.WARNING_MESSAGE);
-//        } else {
+        }
+//        else {
 //            // Hiển thị dialog để người dùng nhập ID
 //            String inputId = JOptionPane.showInputDialog(this, "Nhập Account ID (0 - 4):", "Input ID", JOptionPane.QUESTION_MESSAGE);
 //            if (inputId == null) {
@@ -352,6 +352,7 @@ public class FirstNode extends javax.swing.JFrame {
                 }
                 sv.bully(3);
             } else if (n.getId() == this.sv.getId()) {
+                JOptionPane.showMessageDialog(this, "Bạn chính là điều phối viên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 System.out.println("Đây chính là điều phối viên");
             } else {
                 JOptionPane.showMessageDialog(this, "Coordinator có id: " + n.getId(), "Thông báo", JOptionPane.DEFAULT_OPTION);
@@ -363,7 +364,7 @@ public class FirstNode extends javax.swing.JFrame {
             this.tfMoneyMessage.setEditable(true);
             this.btnSendMoney.setEnabled(true);
             this.btnOpenHistoryTransact.setEnabled(true);
-        }
+//        }
     }//GEN-LAST:event_btnConnectActionPerformed
 
     private void tfMoneyValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfMoneyValueActionPerformed

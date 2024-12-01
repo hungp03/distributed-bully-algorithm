@@ -60,7 +60,7 @@ public class TransactionHistory extends javax.swing.JFrame {
         lbAccountId = new javax.swing.JLabel();
         lbAccountMoney = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Lịch sử giao dịch");
         setResizable(false);
 
