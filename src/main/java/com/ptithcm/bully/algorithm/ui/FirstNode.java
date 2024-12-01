@@ -6,6 +6,8 @@ package com.ptithcm.bully.algorithm.ui;
 
 import com.ptithcm.bully.algorithm.model.Node;
 import com.ptithcm.bully.algorithm.model.Server;
+import com.ptithcm.bully.algorithm.model.TransactionHistoryModel;
+
 import java.awt.event.WindowAdapter;
 
 import java.io.DataOutputStream;
@@ -20,8 +22,6 @@ import java.util.Objects;
  * @author acer
  */
 public class FirstNode extends javax.swing.JFrame {
-
-    private TransactionHistory historyFrame = null;
     private Server sv;
 
     /**
@@ -309,27 +309,28 @@ public class FirstNode extends javax.swing.JFrame {
     private void btnConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConnectActionPerformed
         if (this.tfPort.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập port", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else {
-            // Hiển thị dialog để người dùng nhập ID
-            String inputId = JOptionPane.showInputDialog(this, "Nhập Account ID (0 - 4):", "Input ID", JOptionPane.QUESTION_MESSAGE);
-            if (inputId == null) {
-                return;
-            }
-            if (inputId.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            int serverId = 0;
-            try {
-                serverId = Integer.parseInt(inputId);
-                if (serverId < 0 || serverId > 4) {
-                    JOptionPane.showMessageDialog(this, "ID phải từ 0-4", "Error", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+//        } else {
+//            // Hiển thị dialog để người dùng nhập ID
+//            String inputId = JOptionPane.showInputDialog(this, "Nhập Account ID (0 - 4):", "Input ID", JOptionPane.QUESTION_MESSAGE);
+//            if (inputId == null) {
+//                return;
+//            }
+//            if (inputId.trim().isEmpty()) {
+//                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
+//                return;
+//            }
+//            int serverId = 0;
+//            try {
+//                serverId = Integer.parseInt(inputId);
+//                if (serverId < 0 || serverId > 4) {
+//                    JOptionPane.showMessageDialog(this, "ID phải từ 0-4", "Error", JOptionPane.WARNING_MESSAGE);
+//                    return;
+//                }
+//            } catch (NumberFormatException e) {
+//                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
+//                return;
+//            }
+            int serverId = 1;
             this.sv = new Server(this, 3000, serverId, this.tpLog, this.tpChatbox, this.tfAccountMoney, this.btnSendMoney);
             for (int i = 0; i < 5; i++) {
                 if (i != this.sv.getId()) {
@@ -451,14 +452,13 @@ public class FirstNode extends javax.swing.JFrame {
             lbWarningMsg.setText("");
             sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + "Da gui yeu cau chuyen %d den %d", money, revId));
             sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Đã gửi yêu cầu chuyển tiền!", 0);
+            this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
         }
     }//GEN-LAST:event_btnSendMoneyActionPerformed
 
     private void btnOpenHistoryTransactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenHistoryTransactActionPerformed
-        if (historyFrame == null) {
-            historyFrame = new TransactionHistory(this.sv.getId());
-        }
-
+        TransactionHistory  historyFrame = null;
+        historyFrame = new TransactionHistory(this.sv.getId());
         historyFrame.setVisible(true);
         // Nếu cửa sổ ở trạng thái minimize, khôi phục lại trạng thái bình thường
         historyFrame.setExtendedState(JFrame.NORMAL);

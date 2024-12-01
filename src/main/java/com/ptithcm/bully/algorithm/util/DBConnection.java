@@ -90,7 +90,6 @@ public class DBConnection {
         try {
             Statement stmt = this.conn.createStatement();
             String updateQuery = String.format("exec proc_get_history_transaction %d",id);
-            System.out.println(updateQuery);
             ResultSet rel = stmt.executeQuery(updateQuery);
             SimpleDateFormat Dateformat = new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
             TransactionHistoryModel tmp;
