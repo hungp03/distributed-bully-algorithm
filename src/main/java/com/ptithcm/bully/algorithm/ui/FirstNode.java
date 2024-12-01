@@ -224,6 +224,8 @@ public class FirstNode extends javax.swing.JFrame {
                             .addComponent(jScrollPane3)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbWarningMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(layout.createSequentialGroup()
@@ -238,9 +240,7 @@ public class FirstNode extends javax.swing.JFrame {
                                             .addComponent(tfMoneyValue, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(tfAccountMoney)
-                                            .addComponent(lbWarningMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lbWarningMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(lbWarningMoney, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -261,21 +261,18 @@ public class FirstNode extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(cbReceiveMoneyId, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfMoneyValue, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel7)
-                                    .addComponent(tfAccountMoney, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3))
-                                .addGap(97, 97, 97)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(tfAccountMoney, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbReceiveMoneyId, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfMoneyValue, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(5, 5, 5)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbWarningMoney, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
@@ -295,7 +292,7 @@ public class FirstNode extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -414,33 +411,33 @@ public class FirstNode extends javax.swing.JFrame {
             }
             msg = tfMoneyMessage.getText().trim();
             //#sendMoney because you are coordinator now
-            if (n.getId() == sv.getId()) {
-                //tu chuyen tien
-                sv.connectService.sendMoney(sv.getId(), revId, money, msg);
-                sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + ": Đã chuyển %d đến %d", money, revId));
-                sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Chuyển tiền thành công!", 0);
-                JOptionPane.showMessageDialog(this, "Chuyển tiền thành công!");
-                cbReceiveMoneyId.setSelectedIndex(0);
-                tfMoneyMessage.setText("");
-                tfMoneyValue.setText("");
-                lbWarningCb.setText("");
-                lbWarningMoney.setText("");
-                lbWarningMsg.setText("");
-                this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
-                try {
-                    for (Node i : sv.getListNode()) {
-                        if (i.getId() == revId) {
-                            Socket socket = new Socket(i.getHost(), i.getPort());
-                            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
-                            writer.writeUTF(String.format("receivemoney-%d-%d", sv.getId(), money));
-                            writer.close();
-                            socket.close();
-                        }
-                    }
-                } catch (IOException ignored) {
-                }
-                return;
-            }
+//            if (n.getId() == sv.getId()) {
+//                //tu chuyen tien
+//                sv.connectService.sendMoney(sv.getId(), revId, money, msg);
+//                sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + ": Đã chuyển %d đến %d", money, revId));
+//                sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Chuyển tiền thành công!", 0);
+//                JOptionPane.showMessageDialog(this, "Chuyển tiền thành công!");
+//                cbReceiveMoneyId.setSelectedIndex(0);
+//                tfMoneyMessage.setText("");
+//                tfMoneyValue.setText("");
+//                lbWarningCb.setText("");
+//                lbWarningMoney.setText("");
+//                lbWarningMsg.setText("");
+//                this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
+//                try {
+//                    for (Node i : sv.getListNode()) {
+//                        if (i.getId() == revId) {
+//                            Socket socket = new Socket(i.getHost(), i.getPort());
+//                            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+//                            writer.writeUTF(String.format("receivemoney-%d-%d", sv.getId(), money));
+//                            writer.close();
+//                            socket.close();
+//                        }
+//                    }
+//                } catch (IOException ignored) {
+//                }
+//                return;
+//            }
             //#sendrequesttocoordinator
             String reqMsg = String.format("transfers-%d-%d-%d-%s", sv.getId(), revId, money, msg);
             sv.sendMoneyRequestToCoordinator(reqMsg);

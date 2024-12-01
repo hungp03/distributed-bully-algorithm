@@ -60,7 +60,7 @@ public class Server {
                 while (true) {
                     try {
                         Socket socket = server.accept();
-                        System.out.println("Da ket noi voi " + socket);
+//                        System.out.println("Da ket noi voi " + socket);
                         receive(socket);
                         queueResolve();
                     } catch (IOException e) {
@@ -114,7 +114,7 @@ public class Server {
         Node max = null;
         for (Node i : listNode) {
             if (i.isAdmin()) {
-                System.out.println("Admin node: " + i.getId());
+//                System.out.println("Admin node: " + i.getId());
                 return i;
             }
             if (i.getId() > id) {
@@ -136,8 +136,8 @@ public class Server {
 
     public void initListNode() {
         try {
-            Node n = new Node(3000, "192.168.1.10", 0, false);
-            Node n1 = new Node(3000, "127.0.0.1", 1, false);
+            Node n = new Node(3000, "127.0.0.1", 0, false);
+            Node n1 = new Node(3001, "127.0.0.1", 1, false);
             Node n2 = new Node(3002, "127.0.0.1", 2, false);
             this.listNode.add(n);
             this.listNode.add(n1);
@@ -163,15 +163,25 @@ public class Server {
                     try {
                         SendMoney tmp = messageQueue.poll();
                         // Xử lý yêu cầu chuyển tiền
-                        connectService.sendMoney(tmp.getSendId(), tmp.getReceiveId(), tmp.getMoney(), tmp.getMsg());
-                        System.out.println("#queueResolve : đã chuyển tiền thành công");
 
-                        // Lặp qua tất cả các node để thông báo kết quả
+//                        if (tmp.getSendId() == this.id){
+//                            connectService.sendMoney(tmp.getSendId(), tmp.getReceiveId(), tmp.getMoney(), tmp.getMsg());
+//                            System.out.println("#queueResolve : đã chuyển tiền thành công");
+//                        }
+//                        else{
+//                            
+//                        }
+//                        connectService.sendMoney(tmp.getSendId(), tmp.getReceiveId(), tmp.getMoney(), tmp.getMsg());
+//                        System.out.println("#queueResolve : đã chuyển tiền thành công");
+
+                        // Lặp qua tất cả các node để tìm node cần thông báo kết quả
                         for (Node n : getListNode()) {
                             if (n.getId() == tmp.getSendId()) {
                                 // Nếu node là người gửi tiền, kết nối để xác nhận
                                 try (Socket socket = new Socket(n.getHost(), n.getPort()); DataOutputStream writer = new DataOutputStream(socket.getOutputStream())) {
-                                    writer.writeUTF("confirmtransfers");
+//                                    writer.writeUTF("transfers");
+//                                    writer.writeUTF("confirmtransfers");
+                                      writer.writeUTF(String.format("sendmoney-%d-%d-%d-%s" , tmp.getSendId(), tmp.getReceiveId(), tmp.getMoney(), tmp.getMsg()));
                                     // Ghi nhận thông báo
 //                                     tpSettext(textPane, getCurrentTime() + ":" + getId() + ": " + String.format("Đã chuyển %d đến %d", tmp.MoneyValue, tmp.ReceiveId));
                                 }
@@ -180,6 +190,7 @@ public class Server {
                             if (n.getId() == tmp.getReceiveId()) {
                                 // Nếu node nhận là chính nó
                                 if (n.getId() == id) {
+                                    connectService.receiveMoney(tmp.getSendId(), tmp.getReceiveId(), tmp.getMoney(), tmp.getMsg());
                                     tpSettext(textPane, getCurrentTime() + ":" + getId() + ": " + String.format("Vừa nhận được %d đồng từ id: %d", tmp.getMoney(), tmp.getSendId()));
                                     tpSetMessage(tpChatbox, getCurrentTime() + ": Vừa nhận được tiền", 1);
                                     JOptionPane.showMessageDialog(mainFrame, String.format("Bạn vừa nhận được %s từ %s", tmp.getMoney(), tmp.getSendId()));
@@ -187,9 +198,10 @@ public class Server {
                                     return;
                                 }
                                 // Nếu node nhận không phải là chính nó, thông báo đến node nhận
-                                System.out.println("host: " +n.getHost() + "port: " + n.getPort());
                                 try (Socket socket = new Socket(n.getHost(), n.getPort()); DataOutputStream writer = new DataOutputStream(socket.getOutputStream())) {
-                                    writer.writeUTF(String.format("receivemoney-%d-%d", tmp.getSendId(), tmp.getMoney()));
+//                                    writer.writeUTF(String.format("receivemoney-%d-%d", tmp.getSendId(), tmp.getMoney()));
+                                    System.out.println("sad");
+                                    writer.writeUTF(String.format("receivenewmoney-%d-%d-%d-%s", tmp.getSendId(), tmp.getReceiveId(), tmp.getMoney(), tmp.getMsg()));
                                     tpSettext(textPane, getCurrentTime() + ":" + getId() + ": " + String.format("Đã thông báo đến %d", tmp.getReceiveId()));
                                 }
                             }
@@ -238,7 +250,6 @@ public class Server {
                         String msg = reader.readUTF();
                         System.out.println("Received message: " + msg);
                         String[] list = msg.split("-");
-                        System.out.println("Received message: " + list[0]);
 
                         if (list.length > 5) {
                             for (int i = 5; i < list.length; i++) {
@@ -263,11 +274,15 @@ public class Server {
                                 handleConfirmTransfersMessage();
                             case "receivemoney" ->
                                 handleReceiveMoneyMessage(list);
+                            case "sendmoney" ->
+                                handleSendMoney(list);
+                            case "receivenewmoney" ->
+                                handleReceiveMoney(list);
                             default ->
                                 System.out.println("Received unknown message type");
                         }
                     } catch (EOFException eof) {
-                        System.out.println("Client disconnected normally.");
+//                        System.out.println("Client disconnected normally.");
                         break;
                     } catch (IOException ex) {
                         System.out.println("Error while reading message: " + ex.getMessage());
@@ -279,7 +294,7 @@ public class Server {
             } finally {
                 try {
                     socket.close();
-                    System.out.println("Socket closed");
+//                    System.out.println("Socket closed");
                 } catch (IOException e) {
                     System.out.println("Error closing socket: " + e.getMessage());
                 }
@@ -367,12 +382,13 @@ public class Server {
 
     private void handleTransfersMessage(String[] list, DataOutputStream writer) throws IOException {
         writer.writeUTF("coordinator da nhan yeu cau chuyen tien");
-        System.out.println("server handle: " + this.id);
+//        System.out.println("server handle: " + this.id);
         SendMoney tmp = new SendMoney(Integer.parseInt(list[1]), Integer.parseInt(list[2]), Integer.parseInt(list[3]), list[4]);
         messageQueue.add(tmp);
         queueNotify();
     }
 
+    
     private void handleConfirmTransfersMessage() {
         tpSetMessage(tpChatbox, getCurrentTime() + ": Chuyen tien thanh cong!", 1);
         JOptionPane.showMessageDialog(mainFrame, "Chuyen tien thanh cong!");
@@ -388,6 +404,20 @@ public class Server {
         tfMsg.setText(String.valueOf(connectService.getAccountMoney(id)));
     }
 
+    private void handleReceiveMoney(String[] list){
+        connectService.receiveMoney(Integer.parseInt(list[1]), Integer.parseInt(list[2]), Integer.parseInt(list[3]), list[4]);
+        tpSetMessage(tpChatbox, getCurrentTime() + ": vừa nhận tiền", 1);
+        tpSettext(textPane, getCurrentTime() + ":" + getId() + ": " + String.format("Received %s from %s", list[3], list[1]));
+        JOptionPane.showMessageDialog(mainFrame, String.format("Bạn vừa nhận %s từ %s", list[3], list[1]));
+        tfMsg.setText(String.valueOf(connectService.getAccountMoney(id)));
+    }
+    
+    private void handleSendMoney(String[] list){
+        System.out.println("Send money");
+        connectService.sendMoneyNew(Integer.parseInt(list[1]), Integer.parseInt(list[2]), Integer.parseInt(list[3]), list[4]);
+        tfMsg.setText(String.valueOf(connectService.getAccountMoney(id)));
+
+    }
 // --- Helper methods for specific logic ---
 
     /*
@@ -416,7 +446,6 @@ public class Server {
     private void forwardElectionAnswer(String senderId) {
         try (Socket sk = new Socket(getNodeById(senderId).getHost(), getNodeById(senderId).getPort()); DataOutputStream output = new DataOutputStream(sk.getOutputStream())) {
             output.writeUTF("answer-" + id);
-            System.out.println("Election answer sent successfully");
         } catch (Exception e) {
             System.out.println("Election answer failed");
         }
@@ -479,7 +508,6 @@ public class Server {
             }
         }
 
-        System.out.println("Bắt đầu thực hiện giải thuật bầu chọn bully");
         int cnt = 0;
         for (Node i : this.listNode) {
             if (i.getId() > this.id) {
@@ -489,16 +517,12 @@ public class Server {
                         DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
                         String msg = "election - " + id;
                         writer.writeUTF(msg);
-                        System.out.println("bully send - " + msg);
                         String rev = reader.readUTF();
-                        System.out.println("bully rev - " + rev);
                         reader.close();
                         writer.close();
                     }
-                    System.out.println("Đã xác nhận có tiến trình id cao hơn");
                     cnt++;
                 } catch (IOException ex) {
-                    System.out.println("bully - can't create socket connect to " + i.getHost() + i.getPort());
                     //--- có thể không cần field Timeout---
                     listNode.forEach(item -> {
                         if (item.getId() == i.getId()) {
@@ -511,7 +535,6 @@ public class Server {
             }
         }
         if (cnt > 0) {
-            System.out.println("bully confirm-da xac nhan co it nhat 1 tien trinh co Id cao hon minh");
             switch (opt) {
                 case 0, 1, 2 ->
                     JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
@@ -549,7 +572,7 @@ public class Server {
                                     Socket socket = new Socket(n.getHost(), n.getPort()); //DataInputStream reader = new DataInputStream(socket.getInputStream());
                                      DataOutputStream writer = new DataOutputStream(socket.getOutputStream())) {
                                 writer.writeUTF("coordinator-" + id);
-                                System.out.println("da send coordinator to " + n.getId());
+//                                System.out.println("da send coordinator to " + n.getId());
                             }
                         } catch (IOException e) {
                             System.out.println("node " + n.getId() + " was broke");
@@ -573,9 +596,9 @@ public class Server {
                 try (DataInputStream reader = new DataInputStream(socket.getInputStream())) {
                     writer = new DataOutputStream(socket.getOutputStream());
                     writer.writeUTF(msg);
-                    System.out.println("sendmoneyrequest send - " + msg);
+//                    System.out.println("sendmoneyrequest send - " + msg);
                     String rev = reader.readUTF();
-                    System.out.println("sendmoneyrequest receive - " + rev);
+//                    System.out.println("sendmoneyrequest receive - " + rev);
                     tpSettext(textPane, getCurrentTime() + ":" + n.getId() + ": " + rev);
                 }
                 writer.close();

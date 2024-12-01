@@ -84,7 +84,40 @@ public class DBConnection {
             return false;
         }
     }
+    public boolean sendMoneyNew(int send, int receive, int money, String msg){
+        String updateQuery = "exec sp_new_sendmoney ?, ?, ?, ?";
+        try (PreparedStatement stmt = this.conn.prepareStatement(updateQuery)) {
+            stmt.setInt(1, send);
+            stmt.setInt(2, receive);
+            stmt.setInt(3, money);
+            stmt.setString(4, msg);
 
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi chuyển tiền: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean receiveMoney(int send, int receive, int money, String msg){
+        String updateQuery = "exec sp_new_receivemoney ?, ?, ?, ?";
+        try (PreparedStatement stmt = this.conn.prepareStatement(updateQuery)) {
+            stmt.setInt(1, send);
+            stmt.setInt(2, receive);
+            stmt.setInt(3, money);
+            stmt.setString(4, msg);
+
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Lỗi khi chuyển tiền: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public List<TransactionHistoryModel> getHistoryTransact(int id) {
         List<TransactionHistoryModel> allTransacts = new ArrayList<TransactionHistoryModel>();
         try {
