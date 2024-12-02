@@ -21,6 +21,7 @@ import java.util.Objects;
  * @author acer
  */
 public class FirstNode extends javax.swing.JFrame {
+
     private Server sv;
 
     /**
@@ -330,40 +331,40 @@ public class FirstNode extends javax.swing.JFrame {
 //                JOptionPane.showMessageDialog(this, "Vui lòng nhập ID hợp lệ", "Error", JOptionPane.WARNING_MESSAGE);
 //                return;
 //            }
-            int serverId = 1;
-            this.sv = new Server(this, 3000, serverId, this.tpLog, this.tpChatbox, this.tfAccountMoney, this.btnSendMoney);
-            for (int i = 0; i < 5; i++) {
-                if (i != this.sv.getId()) {
-                    this.cbReceiveMoneyId.addItem(String.valueOf(i));
-                }
+        int serverId = 0;
+        this.sv = new Server(this, 3000, serverId, this.tpLog, this.tpChatbox, this.tfAccountMoney, this.btnSendMoney);
+        for (int i = 0; i < 5; i++) {
+            if (i != this.sv.getId()) {
+                this.cbReceiveMoneyId.addItem(String.valueOf(i));
             }
+        }
 
-            // Khởi động server
-            this.sv.execute();
-            this.lbServerStatus.setText("Server is running on port " + tfPort.getText());
-            this.btnConnect.setEnabled(false);
-            this.btnSendMoney.setEnabled(true);
-            this.btnOpenHistoryTransact.setEnabled(true);
-            // Kiểm tra và thông báo coordinator
-            Node n = this.sv.getCoordinator();
-            if (n == null) {
-                for (Node item : sv.getListNode()) {
-                    // Xử lý nếu không có coordinator
-                }
-                sv.bully(3);
-            } else if (n.getId() == this.sv.getId()) {
-                JOptionPane.showMessageDialog(this, "Bạn chính là điều phối viên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                System.out.println("Đây chính là điều phối viên");
-            } else {
-                JOptionPane.showMessageDialog(this, "Coordinator có id: " + n.getId(), "Thông báo", JOptionPane.DEFAULT_OPTION);
+        // Khởi động server
+        this.sv.execute();
+        this.lbServerStatus.setText("Server is running on port " + tfPort.getText());
+        this.btnConnect.setEnabled(false);
+        this.btnSendMoney.setEnabled(true);
+        this.btnOpenHistoryTransact.setEnabled(true);
+        // Kiểm tra và thông báo coordinator
+        Node n = this.sv.getCoordinator();
+        if (n == null) {
+            for (Node item : sv.getListNode()) {
+                // Xử lý nếu không có coordinator
             }
+            sv.bully(3);
+        } else if (n.getId() == this.sv.getId()) {
+            JOptionPane.showMessageDialog(this, "Bạn chính là điều phối viên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Đây chính là điều phối viên");
+        } else {
+            JOptionPane.showMessageDialog(this, "Coordinator có id: " + n.getId(), "Thông báo", JOptionPane.DEFAULT_OPTION);
+        }
 
-            this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
-            this.cbReceiveMoneyId.setEnabled(true);
-            this.tfMoneyValue.setEditable(true);
-            this.tfMoneyMessage.setEditable(true);
-            this.btnSendMoney.setEnabled(true);
-            this.btnOpenHistoryTransact.setEnabled(true);
+        this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
+        this.cbReceiveMoneyId.setEnabled(true);
+        this.tfMoneyValue.setEditable(true);
+        this.tfMoneyMessage.setEditable(true);
+        this.btnSendMoney.setEnabled(true);
+        this.btnOpenHistoryTransact.setEnabled(true);
 //        }
     }//GEN-LAST:event_btnConnectActionPerformed
 
@@ -376,89 +377,99 @@ public class FirstNode extends javax.swing.JFrame {
     }//GEN-LAST:event_tfMoneyMessageActionPerformed
 
     private void btnSendMoneyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMoneyActionPerformed
-        Node n = this.sv.getCoordinator();
+
+        // Kiểm tra các điều kiện trước
         if (this.tfMoneyValue.getText().isEmpty()) {
             this.lbWarningMoney.setText("Không được để trống");
             return;
         }
+
+        if (this.tfMoneyMessage.getText().trim().isEmpty()) {
+            this.lbWarningMsg.setText("Lời nhắn không được để trống");
+            return;
+        }
+
+        int revId, money;
+        try {
+            revId = Integer.parseInt(Objects.requireNonNull(this.cbReceiveMoneyId.getSelectedItem()).toString());
+        } catch (NumberFormatException e) {
+            lbWarningCb.setText("Bạn chưa chọn Id người nhận");
+            return;
+        }
+
+        try {
+            money = Integer.parseInt(this.tfMoneyValue.getText().trim());
+            int cash = this.sv.connectService.getAccountMoney(sv.getId());
+            if (money < 0) {
+                lbWarningMoney.setText("Số tiền muốn gửi phải lớn hơn 0");
+                return;
+            }
+            if (money > cash) {
+                lbWarningMoney.setText("Số tiền muốn gửi lớn hơn tài khoản hiện có");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            lbWarningMoney.setText("Số tiền muốn gửi không đúng định dạng");
+            return;
+        }
+
+        String msg = tfMoneyMessage.getText().trim();
+        
+        Node n = this.sv.getCoordinator();
         if (n == null) {
             sv.bully(3);
             System.out.println("Coordinator is null");
-        } else {
-            int revId, money;
-            String msg;
-            try {
-                revId = Integer.parseInt(Objects.requireNonNull(this.cbReceiveMoneyId.getSelectedItem()).toString());
-            } catch (NumberFormatException e) {
-                lbWarningCb.setText("Bạn chưa chọn Id người nhận");
-                return;
-            }
-            try {
-                money = Integer.parseInt(this.tfMoneyValue.getText().trim());
-                int cash = this.sv.connectService.getAccountMoney(sv.getId());
-                if (money < 0) {
-                    lbWarningMoney.setText("Số tiền muốn gửi phải lớn hơn 0");
-                    return;
-                }
-                if (money > cash) {
-                    lbWarningMoney.setText("Số tiền muốn gửi lớn hơn tài khoản hiện có");
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                lbWarningMoney.setText("Số tiền muốn gửi không đúng định dạng");
-                return;
-            }
-            if (tfMoneyMessage.getText().trim().isEmpty()) {
-                lbWarningMsg.setText("Lời nhắn không được để trống");
-                return;
-            }
-            msg = tfMoneyMessage.getText().trim();
-            //#sendMoney because you are coordinator now
-            if (n.getId() == sv.getId()) {
-                //tu chuyen tien
-                sv.connectService.sendMoney(sv.getId(), revId, money, msg);
-                sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + ": Đã chuyển %d đến %d", money, revId));
-                sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Chuyển tiền thành công!", 0);
-                JOptionPane.showMessageDialog(this, "Chuyển tiền thành công!");
-                cbReceiveMoneyId.setSelectedIndex(0);
-                tfMoneyMessage.setText("");
-                tfMoneyValue.setText("");
-                lbWarningCb.setText("");
-                lbWarningMoney.setText("");
-                lbWarningMsg.setText("");
-                this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
-                try {
-                    for (Node i : sv.getListNode()) {
-                        if (i.getId() == revId) {
-                            Socket socket = new Socket(i.getHost(), i.getPort());
-                            DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
-                            writer.writeUTF(String.format("receivemoney-%d-%d", sv.getId(), money));
-                            writer.close();
-                            socket.close();
-                        }
-                    }
-                } catch (IOException ignored) {
-                }
-                return;
-            }
-            //#sendrequesttocoordinator
-            String reqMsg = String.format("transfers-%d-%d-%d-%s", sv.getId(), revId, money, msg);
-            sv.sendMoneyRequestToCoordinator(reqMsg);
-            //gui yeu cau chuyen tien
+            n = this.sv.getCoordinator();
+        }
+
+        // Kiểm tra nếu người gửi là Coordinator
+        assert n != null;
+        if (n.getId() == sv.getId()) {
+            sv.connectService.sendMoney(sv.getId(), revId, money, msg);
+            sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + ": Đã chuyển %d đến %d", money, revId));
+            sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Chuyển tiền thành công!", 0);
+            JOptionPane.showMessageDialog(this, "Chuyển tiền thành công!");
             cbReceiveMoneyId.setSelectedIndex(0);
             tfMoneyMessage.setText("");
             tfMoneyValue.setText("");
             lbWarningCb.setText("");
             lbWarningMoney.setText("");
             lbWarningMsg.setText("");
-            sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + "Da gui yeu cau chuyen %d den %d", money, revId));
-            sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Đã gửi yêu cầu chuyển tiền!", 0);
             this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
+
+            try {
+                for (Node i : sv.getListNode()) {
+                    if (i.getId() == revId) {
+                        Socket socket = new Socket(i.getHost(), i.getPort());
+                        DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+                        writer.writeUTF(String.format("receivemoney-%d-%d", sv.getId(), money));
+                        writer.close();
+                        socket.close();
+                    }
+                }
+            } catch (IOException ignored) {
+            }
+            return;
         }
+
+        // Gửi yêu cầu chuyển tiền tới Coordinator
+        String reqMsg = String.format("transfers-%d-%d-%d-%s", sv.getId(), revId, money, msg);
+        sv.sendMoneyRequestToCoordinator(reqMsg);
+
+        // Reset các trường và thông báo
+        cbReceiveMoneyId.setSelectedIndex(0);
+        tfMoneyMessage.setText("");
+        tfMoneyValue.setText("");
+        lbWarningCb.setText("");
+        lbWarningMoney.setText("");
+        lbWarningMsg.setText("");
+        sv.tpSettext(tpLog, String.format(sv.getCurrentTime() + ":" + n.getId() + "Đã gửi yêu cầu chuyển %d đến %d", money, revId));
+        sv.tpSetMessage(tpChatbox, sv.getCurrentTime() + ": Đã gửi yêu cầu chuyển tiền!", 0);
+        this.tfAccountMoney.setText(String.valueOf(sv.connectService.getAccountMoney(sv.getId())));
     }//GEN-LAST:event_btnSendMoneyActionPerformed
 
     private void btnOpenHistoryTransactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenHistoryTransactActionPerformed
-        TransactionHistory  historyFrame = null;
+        TransactionHistory historyFrame = null;
         historyFrame = new TransactionHistory(this.sv.getId());
         historyFrame.setVisible(true);
         // Nếu cửa sổ ở trạng thái minimize, khôi phục lại trạng thái bình thường

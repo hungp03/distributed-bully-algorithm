@@ -134,12 +134,16 @@ public class Server {
 
     public void initListNode() {
         try {
-            Node n = new Node(3000, "127.0.0.1", 1, true);
-//            Node n1 = new Node(3000, "10.252.3.24", 0, false);
-            Node n2 = new Node(3000, "192.168.43.78", 2, false);
+            Node n = new Node(3000, "127.0.0.1", 0, false);
+            Node n1 = new Node(3000, "10.252.7.206", 1, false);
+            Node n2 = new Node(3000, "10.252.7.193", 2, false);
+            Node n3 = new Node(3000, "10.252.7.207", 3, false);
+            Node n4 = new Node(3000, "10.252.7.194", 4, false);
             this.listNode.add(n);
-//            this.listNode.add(n1);
+            this.listNode.add(n1);
             this.listNode.add(n2);
+            this.listNode.add(n3);
+            this.listNode.add(n4);
         } catch (Exception e) {
             System.out.println("error - init list node");
             System.out.println(e.getMessage());
@@ -242,7 +246,7 @@ public class Server {
                         list[4] += list[i];
                     }
                 }
-
+                System.out.println("case receive: " + list[0]);
                 // Xử lý theo từng loại message
                 switch (list[0]) {
                     case "check" -> handleCheckMessage(list, writer);
@@ -408,73 +412,158 @@ public class Server {
         return (format.format(date));
     }
 
-    public void bully(int opt) {
-        //if(flagBully){return;}
-        switch (opt) {
-            case 0 -> JOptionPane.showMessageDialog(mainFrame, "Điều phối viên không phản hổi! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            case 1 -> JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận request từ một tiến trình có Id lớn hơn! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            case 2 -> JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận một election \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            default -> {
-            }
-        }
-
-        System.out.println("Bắt đầu thực hiện giải thuật bầu chọn bully");
-        int cnt = 0;
-        for (Node i : this.listNode) {
-            if (i.getId() > this.id) {
-                try {
-                    try (Socket socket = new Socket(i.getHost(), i.getPort())) {
-                        DataInputStream reader = new DataInputStream(socket.getInputStream());
-                        DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
-                        String msg = "election - " + id;
-                        writer.writeUTF(msg);
-                        System.out.println("bully send - " + msg);
-                        String rev = reader.readUTF();
-                        System.out.println("bully rev - " + rev);
-                        reader.close();
-                        writer.close();
-                    }
-                    System.out.println("Đã xác nhận có tiến trình id cao hơn");
-                    cnt++;
-                } catch (IOException ex) {
-                    System.out.println("bully - can't create socket connect to " + i.getHost() + i.getPort());
-                    //--- có thể không cần field Timeout---
-                    listNode.forEach(item -> {
-                        if (item.getId() == i.getId()) {
-                            item.setTimeout(true);
-                            listNode.set(listNode.indexOf(item), item);
-                        }
-                    });
-                    //-------id khong phan hoi--------
-                }
-            }
-        }
-        if (cnt > 0) {
-            System.out.println("bully confirm-da xac nhan co it nhat 1 tien trinh co Id cao hon minh");
-            switch (opt) {
-                case 0, 1, 2 -> JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
-                default -> {
-                }
-            }
-            return;
-        }
-        //--- day la TH khong co tien trinh nao co Id cao hon => gui xac nhan minh chinh la dieu phoi vien
-        for (Node n : listNode) {
-            if (n.isAdmin()) {
-                n.setAdmin(false);
-                listNode.set(listNode.indexOf(n), n);
-            }
-            if (n.getId() == id) {
-                n.setAdmin(true);
-                listNode.set(listNode.indexOf(n), n);
-            }
-        }
-        JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc! Bạn chính là điều phối viên mới.", "Thông báo", JOptionPane.PLAIN_MESSAGE);
-        //--- gui xac nhan dieu phoi vien moi
-        Coordinator();
-        //flagBully = true;
+//    public void bully(int opt) {
+//        //if(flagBully){return;}
+//        switch (opt) {
+//            case 0 -> JOptionPane.showMessageDialog(mainFrame, "Điều phối viên không phản hổi! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//            case 1 -> JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận request từ một tiến trình có Id lớn hơn! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//            case 2 -> JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận một election \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+//            default -> {
+//            }
+//        }
+//
+//        System.out.println("Bắt đầu thực hiện giải thuật bầu chọn bully");
+//        int cnt = 0;
+//        for (Node i : this.listNode) {
+//            if (i.getId() > this.id) {
+//                try {
+//                    try (Socket socket = new Socket(i.getHost(), i.getPort())) {
+//                        DataInputStream reader = new DataInputStream(socket.getInputStream());
+//                        DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+//                        String msg = "election - " + id;
+//                        writer.writeUTF(msg);
+//                        System.out.println("bully send - " + msg);
+//                        String rev = reader.readUTF();
+//                        System.out.println("bully rev - " + rev);
+//                        reader.close();
+//                        writer.close();
+//                    }
+//                    System.out.println("Đã xác nhận có tiến trình id cao hơn");
+//                    cnt++;
+//                } catch (IOException ex) {
+//                    System.out.println("bully - can't create socket connect to " + i.getHost() + ", port " + i.getPort());
+//                    //--- có thể không cần field Timeout---
+//                    listNode.forEach(item -> {
+//                        if (item.getId() == i.getId()) {
+//                            item.setTimeout(true);
+//                            listNode.set(listNode.indexOf(item), item);
+//                        }
+//                    });
+//                    //-------id khong phan hoi--------
+//                }
+//            }
+//        }
+//        if (cnt > 0) {
+//            System.out.println("bully confirm-da xac nhan co it nhat 1 tien trinh co Id cao hon minh");
+//            switch (opt) {
+//                case 0, 1, 2 -> JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+//                default -> {
+//                }
+//            }
+//            return;
+//        }
+//        //--- day la TH khong co tien trinh nao co Id cao hon => gui xac nhan minh chinh la dieu phoi vien
+//        for (Node n : listNode) {
+//            if (n.isAdmin()) {
+//                n.setAdmin(false);
+//                listNode.set(listNode.indexOf(n), n);
+//            }
+//            if (n.getId() == id) {
+//                n.setAdmin(true);
+//                listNode.set(listNode.indexOf(n), n);
+//            }
+//        }
+//        JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc! Bạn chính là điều phối viên mới.", "Thông báo", JOptionPane.PLAIN_MESSAGE);
+//        //--- gui xac nhan dieu phoi vien moi
+//        Coordinator();
+//        //flagBully = true;
+//    }
+public void bully(int opt) {
+    //if(flagBully){return;}
+    switch (opt) {
+        case 0:
+            JOptionPane.showMessageDialog(mainFrame, "Điều phối viên không phản hổi! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.YES_OPTION);
+            break;
+        case 1:
+            JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận request từ một tiến trình có Id lớn hơn! \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.YES_OPTION);
+            break;
+        case 2:
+            JOptionPane.showMessageDialog(mainFrame, "Bạn vừa nhận một election \n Bắt đầu thực hiện giải thuật bầu chọn Bully", "Thông báo", JOptionPane.YES_OPTION);
+            break;
+        default:
+            break;
     }
 
+    System.out.println("Bat dau thuc hien giai thuat bau chon bully");
+    int cnt = 0;
+    for (Node i : this.listNode) {
+        if (i.getId() > this.id) {
+            try {
+                Socket socket = new Socket(i.getHost(), i.getPort());
+                DataInputStream reader = new DataInputStream(socket.getInputStream());
+                DataOutputStream writer = new DataOutputStream(socket.getOutputStream());
+                String msg = "election-" + id;
+                writer.writeUTF(msg);
+                System.out.println("bully send - " + msg);
+                String rev = reader.readUTF();
+                System.out.println("bully rev-" + rev);
+                reader.close();
+                writer.close();
+                socket.close();
+                System.out.println("bully-da xac nhan co tien trinh co Id cao hon minh");
+                cnt++;
+            } catch (IOException ex) {
+                System.out.println("bully - can't create socket connect to " + i.getHost() + i.getPort());
+                //--- có thể không cần field Timeout---
+                listNode.forEach(item -> {
+                    if (item.getId() == i.getId()) {
+                        Node tmp = item;
+                        tmp.setTimeout(true);
+                        listNode.set(listNode.indexOf(item), tmp);
+                        //----setting node nay da bi hong----
+                        //item.setTimeoout(true);
+                    }
+                });
+                //-------id khong phan hoi--------
+            }
+        }
+    }
+    //--- co it nhat 1 tien trinh co Id cao hon => dung im cho thong bao
+    if (cnt > 0) {
+        System.out.println("bully confirm-da xac nhan co it nhat 1 tien trinh co Id cao hon minh");
+        switch (opt) {
+            case 0:
+                JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                break;
+            case 2:
+                JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc!", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                break;
+            default:
+                break;
+        }
+        return;
+    }
+    //--- day la TH khong co tien trinh nao co Id cao hon => gui xac nhan minh chinh la dieu phoi vien
+    for (Node n : listNode) {
+        if (n.isAdmin()) {
+            Node tmp = n;
+            tmp.setAdmin(false);
+            listNode.set(listNode.indexOf(n), tmp);
+        }
+        if (n.getId() == id) {
+            Node tmp = n;
+            tmp.setAdmin(true);
+            listNode.set(listNode.indexOf(n), tmp);
+        }
+    }
+    JOptionPane.showMessageDialog(mainFrame, "Quá trình bầu chọn đã kết thúc! Bạn chính là điều phối viên mới.", "Thông báo", JOptionPane.DEFAULT_OPTION);
+    //--- gui xac nhan dieu phoi vien moi
+    Coordinator();
+    //flagBully = true;
+}
     public void Coordinator() {
         for (Node n : listNode) {
             if (this.id != n.getId()) {
